@@ -21,20 +21,24 @@ public class Game extends JFrame implements ActionListener {
      */
     private GraphicsPane gPane;
     private JButton nextButton;
+    private JButton resetButton;
     
     public Game() {
         super("Game");
-        setSize(240, 280);
+        setSize(440, 480);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         gPane = new GraphicsPane();
         nextButton = new JButton("Start");
         nextButton.addActionListener(this);
+        resetButton = new JButton("Reset");
+        resetButton.addActionListener(this);
         
         JPanel jp = new JPanel();
         jp.add(gPane);
         jp.add(nextButton);
+        jp.add(resetButton);
         
         getContentPane().add(jp);
         setVisible(true);
@@ -46,6 +50,14 @@ public class Game extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(resetButton)) {
+            if (gPane.isRunning()) {
+                gPane.stop();
+                nextButton.setText("Start");
+            }
+            gPane.render();
+            return;
+        }
         if (gPane.isRunning()) {
             gPane.stop();
             nextButton.setText("Start");
