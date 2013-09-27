@@ -10,7 +10,9 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -26,6 +28,8 @@ public class Game extends JFrame implements ActionListener, ItemListener {
     private JButton nextButton;
     private JButton resetButton;
     private JCheckBox manualCheck;
+    private JButton loadButton;
+    private JButton saveButton;
     
     public Game() {
         super("Game");
@@ -40,12 +44,18 @@ public class Game extends JFrame implements ActionListener, ItemListener {
         resetButton.addActionListener(this);
         manualCheck = new JCheckBox("Manual mode");
         manualCheck.addItemListener(this);
+        loadButton = new JButton("Load");
+        loadButton.addActionListener(this);
+        saveButton = new JButton("Save");
+        saveButton.addActionListener(this);
         
         JPanel jp = new JPanel();
         jp.add(gPane);
         jp.add(manualCheck);
         jp.add(nextButton);
         jp.add(resetButton);
+        jp.add(loadButton);
+        jp.add(saveButton);
         
         getContentPane().add(jp);
         setVisible(true);
@@ -55,6 +65,10 @@ public class Game extends JFrame implements ActionListener, ItemListener {
         new Game();
     }
 
+    private void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(resetButton)) {
@@ -65,13 +79,29 @@ public class Game extends JFrame implements ActionListener, ItemListener {
             gPane.render();
             return;
         }
-        if (gPane.isRunning()) {
-            gPane.stop();
-            nextButton.setText("Start");
+        else if (e.getSource().equals(loadButton)) {
+            try {
+                gPane.loadFromFile("config.cfg");
+            } catch (Exception ex) {
+                showMessage("Could not find file to load");
+            }
         }
-        else {
-            gPane.start();  
-            nextButton.setText("Stop");
+        else if (e.getSource().equals(saveButton)) {
+            try {
+                gPane.saveToFile("config.cfg");
+            } catch (Exception ex) {
+                showMessage("Could not save to file");
+            }
+        }
+        else if (e.getSource().equals(nextButton)) {
+            if (gPane.isRunning()) {
+                gPane.stop();
+                nextButton.setText("Start");
+            }
+            else {
+                gPane.start();  
+                nextButton.setText("Stop");
+            }
         }
     }
 

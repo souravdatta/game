@@ -5,10 +5,14 @@
 package com.sourav.apps.game;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.JPanel;
 import java.util.Random;
 
@@ -247,5 +251,20 @@ public class GraphicsPane extends JPanel implements Runnable, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         
+    }
+    
+    public void saveToFile(String fileName) throws IOException {
+        ObjectOutputStream ostream = 
+                new ObjectOutputStream(new FileOutputStream(fileName));
+        ostream.writeObject(this.blocks);
+        ostream.flush();
+        ostream.close();
+    }
+    
+    public void loadFromFile(String fileName) throws Exception {
+        ObjectInputStream istream =
+                new ObjectInputStream(new FileInputStream(fileName));
+        this.blocks = (int[][])istream.readObject();
+        repaint();
     }
 }
