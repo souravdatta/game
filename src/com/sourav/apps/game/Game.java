@@ -6,7 +6,10 @@ package com.sourav.apps.game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -14,7 +17,7 @@ import javax.swing.JPanel;
  *
  * @author sdatta
  */
-public class Game extends JFrame implements ActionListener {
+public class Game extends JFrame implements ActionListener, ItemListener {
 
     /**
      * @param args the command line arguments
@@ -22,6 +25,7 @@ public class Game extends JFrame implements ActionListener {
     private GraphicsPane gPane;
     private JButton nextButton;
     private JButton resetButton;
+    private JCheckBox manualCheck;
     
     public Game() {
         super("Game");
@@ -34,9 +38,12 @@ public class Game extends JFrame implements ActionListener {
         nextButton.addActionListener(this);
         resetButton = new JButton("Reset");
         resetButton.addActionListener(this);
+        manualCheck = new JCheckBox("Manual mode");
+        manualCheck.addItemListener(this);
         
         JPanel jp = new JPanel();
         jp.add(gPane);
+        jp.add(manualCheck);
         jp.add(nextButton);
         jp.add(resetButton);
         
@@ -66,5 +73,11 @@ public class Game extends JFrame implements ActionListener {
             gPane.start();  
             nextButton.setText("Stop");
         }
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent e) {
+        boolean manualMode = (e.getStateChange() == 1)? true : false;
+        gPane.setManual(manualMode);
     }
 }

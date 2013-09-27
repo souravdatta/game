@@ -5,6 +5,10 @@
 package com.sourav.apps.game;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import java.util.Random;
 
@@ -12,7 +16,7 @@ import java.util.Random;
  *
  * @author sdatta
  */
-public class GraphicsPane extends JPanel implements Runnable {
+public class GraphicsPane extends JPanel implements Runnable, MouseListener {
     public static final int WIDTH = 400;
     public static final int HEIGHT = 400;
     public static final int BLOCKN = 50;
@@ -21,13 +25,23 @@ public class GraphicsPane extends JPanel implements Runnable {
     private Random randGen;
     private Thread runThread;
     private volatile boolean running = false;
+    private volatile boolean manual = false;
 
+    public boolean isManual() {
+        return manual;
+    }
+    
+    public void setManual(boolean m) {
+        manual = m;
+    }
+    
     public boolean isRunning() {
         return running;
     }
     
     public GraphicsPane() {
-        blocks = new int[BLOCKN][BLOCKN];        
+        blocks = new int[BLOCKN][BLOCKN];    
+        addMouseListener(this);
         update();
     }
     
@@ -35,7 +49,10 @@ public class GraphicsPane extends JPanel implements Runnable {
         randGen = new Random(new java.util.Date().getTime());
         for (int i = 0; i < BLOCKN; i++) {
             for (int j = 0; j < BLOCKN; j++) {                
-                int dice = randGen.nextInt(2);
+                int dice = 0;
+                if (!isManual()) {
+                    dice = randGen.nextInt(2);
+                }
                 dice = (dice < 0)? -dice : dice;
                 blocks[i][j] = dice;
             }
@@ -171,5 +188,64 @@ public class GraphicsPane extends JPanel implements Runnable {
                 Thread.sleep(300);
             } catch (InterruptedException ex) {}
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (!isManual())
+            return;
+        
+        int cx = e.getX();
+        int cy = e.getY();
+        
+        System.out.printf("Clicked@(%d, %d)\n", cx, cy);
+        
+        int block_width = WIDTH / BLOCKN;
+        int block_height = HEIGHT / BLOCKN;
+        
+        for (int start_y = 0, i = 0; 
+             i < BLOCKN;
+             i++, start_y += block_height) {
+            
+            if ((cy >= start_y) && (cy <= start_y + block_height)) {
+                for (int start_x = 0, j = 0;
+                     j < BLOCKN; 
+                     j++, start_x += block_width) {
+                    
+                    if ((cx >= start_x) && (cx <= start_x + block_width)) {
+                        // indices are actually (j, i)
+                        // as they are rendered reversed
+                        
+                        if (blocks[j][i] == 1)
+                            blocks[j][i] = 0;
+                        else
+                            blocks[j][i] = 1;
+                    }
+                }
+            }
+            
+        }
+        
+        repaint();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        
     }
 }
