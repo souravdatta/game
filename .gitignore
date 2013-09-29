@@ -1,3 +1,5 @@
 *.cfg
 /dist/
 /build/
+.DS_Store
+

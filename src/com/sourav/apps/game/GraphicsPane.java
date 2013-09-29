@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -201,8 +200,6 @@ public class GraphicsPane extends JPanel implements Runnable, MouseListener {
         
         int cx = e.getX();
         int cy = e.getY();
-        
-        System.out.printf("Clicked@(%d, %d)\n", cx, cy);
         
         int block_width = WIDTH / BLOCKN;
         int block_height = HEIGHT / BLOCKN;

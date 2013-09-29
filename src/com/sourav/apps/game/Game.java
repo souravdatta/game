@@ -4,13 +4,14 @@
  */
 package com.sourav.apps.game;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,8 +34,7 @@ public class Game extends JFrame implements ActionListener, ItemListener {
     
     public Game() {
         super("Game");
-        setSize(440, 480);
-        setResizable(false);
+        setSize(480, 480);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         gPane = new GraphicsPane();
@@ -49,13 +49,19 @@ public class Game extends JFrame implements ActionListener, ItemListener {
         saveButton = new JButton("Save");
         saveButton.addActionListener(this);
         
-        JPanel jp = new JPanel();
-        jp.add(gPane);
-        jp.add(manualCheck);
-        jp.add(nextButton);
-        jp.add(resetButton);
-        jp.add(loadButton);
-        jp.add(saveButton);
+        JPanel fp = new JPanel(new FlowLayout());
+        fp.add(manualCheck);
+        fp.add(nextButton);
+        fp.add(resetButton);
+        fp.add(loadButton);
+        fp.add(saveButton);
+        
+        JPanel gp = new JPanel(new FlowLayout());
+        gp.add(gPane);
+        
+        JPanel jp = new JPanel(new BorderLayout());
+        jp.add(gp, BorderLayout.NORTH);
+        jp.add(fp, BorderLayout.SOUTH);
         
         getContentPane().add(jp);
         setVisible(true);
